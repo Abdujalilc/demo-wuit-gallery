@@ -1,0 +1,96 @@
+﻿@model DemoWUITGallery.Models.Image
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-4">
+            <form id="add-image" asp-action="UploadImage">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger">
+                </div>
+                <input name="isValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
+
+                @Html.AntiForgeryToken()
+                @if (Model.PhotoGalleryId == 0)
+                {
+                    <div class="form-group">
+                        <label asp-for="PhotoGalleryId" class="control-label"></label>
+                        <select asp-for="PhotoGalleryId" class="form-control" asp-items="ViewBag.PhotoGalleryId">
+                            <option>Please select one</option>
+                        </select>
+                        <span asp-validation-for="PhotoGalleryId" class="text-danger"></span>
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(model => model.PhotoGalleryId)
+                }
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="file" id="files" name="files" />
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary">Upload</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <div id="progress_bar">
+                <div class="progressbar">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+</div>
+
+<script>
+    $('#add-image').submit(function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: this.action,
+            type: this.method,
+            data: new FormData(this),
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: false,
+            success: function(data) {
+                $('.modal-content').html(data);
+                var isValid = document.getElementsByName('isValid')[0].value == 'True';
+                if (isValid) {
+                    $('#modal-container').modal('hide');
+                    location.reload(true);
+                }
+            },
+            error: function(data) {
+                $('.modal-content').html(data);
+            }
+        });
+    });
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

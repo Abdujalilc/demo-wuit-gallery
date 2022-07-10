@@ -1,0 +1,64 @@
+﻿@model DemoWUITGallery.Models.PhotoGallery
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>PhotoGallery</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CreationDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CreationDate)
+        </dd>
+    </dl>
+
+    <div class="row">
+        @foreach (var image in Model.Images.Content)
+        {
+            <div class="col-md-4">
+                <div class="thumbnail">
+                    <a class="toggle-gallery" data-url="@Url.Action("ImagesDetails", "PhotoGalleries", new { id = @ViewBag.galleryId })" 
+                    data-target="#modal-container" data-toggle="modal" href="#">
+                        <img src="@Url.Content(image.ThumbnailPath)" alt="@image.Title" />
+                        <div class="caption">@image.Title</div>
+                    </a>
+                </div>
+            </div>
+        }
+        @{
+            var prevDisabled = Model.Images.HasPreviousPage ? "" : "disabled";
+            var nextDisabled = Model.Images.HasNextPage ? "" : "disabled";
+        }
+    </div>
+    <div class="row">
+        <a asp-action="Details" asp-route-page="@(Model.Images.CurrentPage - 1)" class="btn btn-default @prevDisabled">Previous</a>
+        <a asp-action="Details" asp-route-page="@(Model.Images.CurrentPage + 1)" class="btn btn-default @nextDisabled">Next</a>
+    </div>
+
+
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a> |
+    
+    <a id="upload-image" data-url="@Url.Action("Create", "Images", new { PhotogalleryId = @ViewBag.galleryId })"
+       data-target="#modal-container" data-toggle="modal" href="#">
+        Add Image
+    </a>
+</div>
+
+@{
+    await Html.RenderPartialAsync("_ImageModal");
+}

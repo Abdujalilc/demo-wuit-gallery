@@ -1,0 +1,17 @@
+﻿TempData["Error"] = "Photo gallery id is null";
+
+
+
+@if (@ViewBag.Message != null)
+
+@if (ViewBag.Error != null)
+
+@if (ViewBag.Info != null)
+
+@if (TempData["Message"] != null)
+
+@if (TempData["Success"] != null)
+
+@if (TempData["Error"] != null)
+
+@if (TempData["Info"] != null)
