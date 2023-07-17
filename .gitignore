@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /wwwroot/GalleryImages/Thumbs/*.jpg
 /Database/*.db-shm
 /Database/*.db-wal
+/wwwroot/GalleryImages
